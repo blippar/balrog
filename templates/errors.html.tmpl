@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{template "Head" .}}
+    <style>
+    #error_container {
+      margin: 0 auto;
+      text-align: center;
+      max-width: 480px;
+      padding: 10em 0;
+    }
+    #error_container .error_code {
+      font-size: 96px;
+      line-height: 100px;
+    }
+    </style>
+  </head>
+  <body>
+
+    {{template "Navbar" .}}
+
+    <div id="error_container" class="container">
+      <h4>Error</h4>
+      <h1 class="error_code">{{.Error.Code}}</h1>
+      <h3>{{.Error.Status}}</h3>
+    </div>
+
+
+
+  </body>
+</html>

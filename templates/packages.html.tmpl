@@ -1,0 +1,119 @@
+{{$current_repo := .CurrentRepository}}
+{{$current_arch := .CurrentArch}}
+<!DOCTYPE html>
+<html>
+  <head>
+    {{template "Head" .}}
+  </head>
+  <body>
+
+    {{template "Navbar" . }}
+
+    <table id="packages" class="table table-bordered table-striped" width="100%" cellspacing="0">
+      <thead>
+        <tr>
+          <th scope="col">Package</th>
+          <th scope="col">Version</th>
+          <th scope="col" class="text-center">Arch</th>
+          <th scope="col" class="text-center" style="width:35px;">URL</th>
+          <th scope="col">Description</th>
+          <th scope="col" class="text-center">License</th>
+          <th scope="col" class="text-center" style="width:35px;">DL</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .Packages}}
+          <tr>
+            <td>{{.Package}}</td>
+            <td>{{.Version}}</td>
+            <td class="text-center">{{.Arch}}</td>
+            <td class="text-center">
+              <a href="{{.URL}}"><span class="oi oi-external-link"></span></a>
+            </td>
+            <td>{{.Description}}</td>
+            <td class="text-center">{{.License}}</td>
+            <td class="text-center">
+              <a href="/{{$current_repo.Name}}/{{.Arch}}/{{.APK}}"><span class="oi oi-data-transfer-download"></span></a>
+            </td>
+          </tr>
+        {{end}}
+      </tbody>
+    </table>
+
+    <nav class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light">
+
+      <a class="navbar-brand d-lg-none" href="#">Filters</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Architecture</a>
+          </li>
+
+          {{if eq $current_arch ""}}
+          <li class="nav-item active">
+          {{else}}
+          <li class="nav-item">
+          {{end}}
+            <a class="nav-link" href="/{{$current_repo.Name}}/">All</a>
+          </li>
+
+          {{range $arch := $current_repo.Arch}}
+            {{ if eq $arch $current_arch}}
+            <li class="nav-item active">
+            {{else}}
+            <li class="nav-item">
+            {{end}}
+              <a class="nav-link" href="/{{$current_repo.Name}}/{{$arch}}/">{{$arch}}</a>
+            </li>
+          {{end}}
+
+        </ul>
+
+        <ul class="navbar-nav mr-2">
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Search</a>
+          </li>
+        </ul>
+
+        <form class="form-inline">
+            <input type="text" class="form-control search" placeholder="Package Name, Version, ..." aria-label="searchTerm">
+        </form>
+
+      </div>
+
+    </nav>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        var table = $('#packages').DataTable({
+          "ordering": true,
+          "info":     false,
+          "paging":   false,
+          "searching":true,
+          "columns": [
+            { "orderable": true },
+            { "orderable": true },
+            { "orderable": true },
+            { "orderable": false },
+            { "orderable": false },
+            { "orderable": true },
+            { "orderable": false },
+          ]
+        });
+        $("form").submit(function(e){
+            e.preventDefault();
+        });
+        $(".search").keyup(function () {
+          table.search($(".search").val());
+          table.draw();
+        });
+      });
+    </script>
+
+  </body>
+</html>

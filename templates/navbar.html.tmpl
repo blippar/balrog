@@ -1,0 +1,80 @@
+{{define "Navbar"}}
+{{$current := .CurrentRepository}}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+  <a class="navbar-brand" href="#">{{.Title}}</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+
+    <ul class="navbar-nav mr-auto">
+
+      <li class="nav-item">
+        {{if and (not .Error) (not $current)}}
+        <a class="nav-link active" href="/">Home</a>
+        {{else}}
+        <a class="nav-link" href="/">Home</a>
+        {{end}}
+      </li>
+
+      {{if not $current}}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Repositories
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        {{range $_, $repo := .Repositories}}
+          <a class="dropdown-item" href="/{{$repo.Name}}/">{{$repo.Name}}</a>
+        {{end}}
+        </div>
+
+      </li>
+      {{else}}
+      <li class="nav-item dropdown active">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Repositories
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        {{range $_, $repo := .Repositories}}
+          {{if eq $repo.Name $current.Name}}
+          <a class="dropdown-item disabled" href="/{{$repo.Name}}/">{{$repo.Name}}</a>
+          {{else}}
+          <a class="dropdown-item" href="/{{$repo.Name}}/">{{$repo.Name}}</a>
+          {{end}}
+        {{end}}
+        </div>
+
+      </li>
+      {{end}}
+
+    </ul>
+
+    {{if $current }}
+    <ul class="navbar-nav mr-2">
+
+        {{if gt (len $current.KeyName) 0}}
+        <li class="nav-item dropdown">
+
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Keys
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+          {{range $key, $_ := $current.KeyName}}
+            <a class="dropdown-item" href="/{{$current.Name}}/{{$key}}">{{$key}}</a>
+          {{end}}
+          </div>
+
+        </li>
+        {{end}}
+
+    </ul>
+    {{end}}
+
+  </div>
+
+</nav>
+{{end}}

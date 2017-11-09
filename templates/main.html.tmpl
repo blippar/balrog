@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{template "Head" .}}
+  </head>
+  <body>
+
+    {{template "Navbar" .}}
+
+    <div class="container">
+    {{range $_, $repo := .Repositories}}
+      <div class="row mt-md-5" style="margin-top:15px;">
+        <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title">{{$repo.Name}}</h3>
+              </div>
+              <div class="card-footer">
+                <span class="float-left">
+                  <h6 class="card-subtitle mb-2 text-muted">Available architectures</h6>
+                  <a href="/{{$repo.Name}}/" class="card-link">All</a>
+                  {{range $arch := $repo.Arch}}
+                  <a href="/{{$repo.Name}}/{{$arch}}/" class="card-link">{{$arch}}</a>
+                  {{end}}
+                </span>
+                {{if gt (len $repo.KeyName) 0}}
+                <div class="align-baseline float-right" style="height:100%;">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="oi oi-key">
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                      {{range $key, $_ := $repo.KeyName}}
+                      <a class="dropdown-item" href="/{{$repo.Name}}/{{$key}}">{{$key}}</a>
+                      {{end}}
+                    </div>
+                </div>
+                {{end}}
+              </div>
+            </div>
+        </div>
+      </div>
+    {{end}}
+    </div>
+
+  </body>
+</html>
