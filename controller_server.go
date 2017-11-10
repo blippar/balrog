@@ -1,10 +1,10 @@
-package apk
+package browser
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/render"
+	"github.com/sirupsen/logrus"
 )
 
 func (s *Server) listRepositories(w http.ResponseWriter, r *http.Request) {
@@ -21,6 +21,8 @@ func (s *Server) listRepositories(w http.ResponseWriter, r *http.Request) {
 			"Title":        "APK Repository",
 			"Repositories": s.Repositories,
 		})
-		fmt.Println(err)
+		if err != nil {
+			logrus.WithError(err).Warning("templateError")
+		}
 	}
 }

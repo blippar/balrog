@@ -1,9 +1,11 @@
-package apk
+package browser
 
 import (
 	"net/http"
+	"os"
+	"path"
 
-	"github.com/0rax/apk/apk"
+	"github.com/blippar/alpine-package-browser/apk"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
@@ -32,11 +34,27 @@ func (s *Server) initRouter() error {
 		rep.Init(s.Storage.Service)
 		r.Mount("/"+rep.Name+"/", s.newRepositoryRouter(rep))
 	}
+	r.Mount("/dist/", s.newDistRouter("/dist", s.HTTP.Dist))
 
 	// Attach router to Server
 	s.router = r
 
 	return nil
+}
+
+func (s *Server) newDistRouter(prefix, folder string) http.Handler {
+
+	r := chi.NewRouter()
+
+	if !path.IsAbs(folder) {
+		workDir, _ := os.Getwd()
+		folder = path.Join(workDir, folder)
+	}
+
+	fs := http.StripPrefix(prefix, http.FileServer(http.Dir(folder)))
+	r.Get("/", http.RedirectHandler("/", 301).ServeHTTP)
+	r.Get("/*", fs.ServeHTTP)
+	return r
 }
 
 // newRepositoryRouter creates a new subrouter for the passed reository

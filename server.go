@@ -1,4 +1,4 @@
-package apk
+package browser
 
 import (
 	"context"
@@ -40,7 +40,7 @@ func (s *Server) Init() (err error) {
 	}
 
 	// Init templator
-	if s.tmpl, err = template.New("").ParseGlob("templates/*.html.tmpl"); err != nil {
+	if s.tmpl, err = template.New("").ParseGlob(s.HTTP.Templates); err != nil {
 		return err
 	}
 

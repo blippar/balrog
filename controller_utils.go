@@ -1,4 +1,4 @@
-package apk
+package browser
 
 import (
 	"net/http"

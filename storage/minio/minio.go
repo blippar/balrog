@@ -7,7 +7,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/0rax/apk/storage"
+	"github.com/blippar/alpine-package-browser/storage"
 	"github.com/minio/minio-go"
 )
 
@@ -18,6 +18,7 @@ type Storage struct {
 	*minio.Client `json:"-"`
 
 	Endpoint   string `json:"endpoint"`
+	Region     string `json:"region"`
 	AccessKey  string `json:"access_key"`
 	PrivateKey string `json:"private_key"`
 	SSL        bool   `json:"ssl"`
@@ -27,14 +28,17 @@ type Storage struct {
 
 // Init configures the underlying storage engine
 func (s *Storage) Init() (err error) {
-	s.Client, err = minio.New(s.Endpoint, s.AccessKey, s.PrivateKey, s.SSL)
+	if s.Endpoint == "" {
+		s.Endpoint = "s3.amazonaws.com"
+	}
+	s.Client, err = minio.NewWithRegion(s.Endpoint, s.AccessKey, s.PrivateKey, s.SSL, s.Region)
 	if err != nil {
 		return err
 	}
-	if ok, err := s.Client.BucketExists(s.Bucket); !ok {
-		return fmt.Errorf("Bucket %s does not exists", s.Bucket)
-	} else if err != nil {
+	if ok, err := s.Client.BucketExists(s.Bucket); err != nil {
 		return err
+	} else if !ok {
+		return fmt.Errorf("storage/minio: bucket '%s' does not exists", s.Bucket)
 	}
 	return nil
 }
@@ -48,8 +52,6 @@ func (s *Storage) WithPrefix(prefix string) storage.Service {
 
 // GetObject returns the specified object if found
 func (s Storage) GetObject(ctx context.Context, filePath string) (io.ReadCloser, error) {
-
-	fmt.Println(path.Join(s.Prefix, filePath))
 
 	o, err := s.Client.GetObjectWithContext(ctx, s.Bucket, path.Join(s.Prefix, filePath), minio.GetObjectOptions{})
 	if err != nil {

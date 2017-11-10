@@ -1,15 +1,15 @@
-package apk
+package browser
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path"
 
-	"github.com/0rax/apk/apk"
+	"github.com/blippar/alpine-package-browser/apk"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"github.com/sirupsen/logrus"
 )
 
 func (s *Server) listRepoPackages(repo *apk.Repository, w http.ResponseWriter, r *http.Request) {
@@ -37,7 +37,9 @@ func (s *Server) listRepoPackages(repo *apk.Repository, w http.ResponseWriter, r
 			"CurrentRepository": repo,
 			"Packages":          pkgs,
 		})
-		fmt.Println(err)
+		if err != nil {
+			logrus.WithError(err).Warning("templateError")
+		}
 	}
 }
 

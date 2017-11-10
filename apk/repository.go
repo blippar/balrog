@@ -5,7 +5,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/0rax/apk/storage"
+	"github.com/blippar/alpine-package-browser/storage"
 )
 
 // Repository defines an APK repository configuration and underlying storage
