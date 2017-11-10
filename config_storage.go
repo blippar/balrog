@@ -3,9 +3,9 @@ package browser
 import (
 	"fmt"
 
-	"github.com/blippar/alpine-package-browser/storage"
-	"github.com/blippar/alpine-package-browser/storage/afero"
-	"github.com/blippar/alpine-package-browser/storage/minio"
+	"github.com/blippar/balrog/storage"
+	"github.com/blippar/balrog/storage/afero"
+	"github.com/blippar/balrog/storage/minio"
 )
 
 // StoreConfig defines a configurable StorageService

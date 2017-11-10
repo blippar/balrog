@@ -7,7 +7,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/blippar/alpine-package-browser/storage"
+	"github.com/blippar/balrog/storage"
 	"github.com/minio/minio-go"
 )
 

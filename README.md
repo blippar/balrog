@@ -1,1 +1,1 @@
-# APK Browser & Proxy
+# Balrog (APK Browser & Proxy)

@@ -6,7 +6,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/blippar/alpine-package-browser/apk"
+	"github.com/blippar/balrog/apk"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/sirupsen/logrus"

@@ -7,7 +7,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/blippar/alpine-package-browser/storage"
+	"github.com/blippar/balrog/storage"
 	"github.com/spf13/afero"
 )
 

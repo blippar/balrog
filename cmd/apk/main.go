@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/blippar/alpine-package-browser"
+	browser "github.com/blippar/balrog"
 )
 
 var configPath = flag.String("config", "", "path to your config file")

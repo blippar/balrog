@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	"github.com/blippar/alpine-package-browser/apk"
+	"github.com/blippar/balrog/apk"
 )
 
 // Config defines the software configuration
