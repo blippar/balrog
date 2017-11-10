@@ -52,7 +52,6 @@ func (s *Server) newDistRouter(prefix, folder string) http.Handler {
 	}
 
 	fs := http.StripPrefix(prefix, http.FileServer(http.Dir(folder)))
-	r.Get("/", http.RedirectHandler("/", 301).ServeHTTP)
 	r.Get("/*", fs.ServeHTTP)
 	return r
 }

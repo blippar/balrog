@@ -26,7 +26,7 @@ func (s *Server) errorHandler(w http.ResponseWriter, r *http.Request, code int, 
 		render.JSON(w, r, jErr)
 	default:
 		s.tmpl.ExecuteTemplate(w, "errors.html.tmpl", map[string]interface{}{
-			"Title":        "APK Repository",
+			"Title":        s.Title,
 			"Repositories": s.Repositories,
 			"Error":        jErr,
 		})

@@ -14,6 +14,7 @@ WORKDIR /app
 COPY --from=builder /go/src/github.com/blippar/alpine-package-browser/bin/apk /app/bin/apk
 COPY config.example.json   /app/config.json
 COPY templates/*.html.tmpl /app/templates/
+COPY dist/                 /app/dist/
 
 EXPOSE 8000
 ENTRYPOINT ["bin/apk"]

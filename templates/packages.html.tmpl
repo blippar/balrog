@@ -4,6 +4,23 @@
 <html>
   <head>
     {{template "Head" .}}
+    <style>
+      body {
+        overflow-x: hidden;
+      }
+      table.dataTable {
+        margin-top: 0 !important;
+      }
+      #packages_filter {
+        display: none;
+      }
+      #packages {
+        margin-bottom: 56px;
+      }
+      #packages_wrapper {
+        overflow-x: scroll;
+      }
+    </style>
   </head>
   <body>
 

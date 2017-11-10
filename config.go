@@ -9,6 +9,7 @@ import (
 
 // Config defines the software configuration
 type Config struct {
+	Title        string            `json:"title"`
 	HTTP         HTTPConfig        `json:"http"`
 	Storage      StoreConfig       `json:"storage"`
 	Repositories []*apk.Repository `json:"repositories"`
@@ -16,6 +17,7 @@ type Config struct {
 
 // SetDefaultConfig fills in the default values for a configuration file
 func (cfg *Config) SetDefaultConfig() {
+	cfg.Title = "APK Browser"
 	cfg.HTTP.SetDefaultConfig()
 }
 

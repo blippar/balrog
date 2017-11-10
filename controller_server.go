@@ -18,7 +18,7 @@ func (s *Server) listRepositories(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, repo)
 	default:
 		err := s.tmpl.ExecuteTemplate(w, "main.html.tmpl", map[string]interface{}{
-			"Title":        "APK Repository",
+			"Title":        s.Title,
 			"Repositories": s.Repositories,
 		})
 		if err != nil {
