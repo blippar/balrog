@@ -10,11 +10,11 @@ var paths = {
     'node_modules/popper.js/dist/umd/popper.js',
     'node_modules/bootstrap/dist/js/bootstrap.js',
     'node_modules/datatables/media/js/jquery.dataTables.js',
-    'node_modules/datatables/media/js/dataTables.bootstrap4.js'
+    'node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js'
   ],
   styles: [
     'node_modules/bootstrap/dist/css/bootstrap.css',
-    'node_modules/datatables/media/css/dataTables.bootstrap4.css',
+    'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
     'node_modules/open-iconic/font/css/open-iconic-bootstrap.css'
   ],
   fonts: [

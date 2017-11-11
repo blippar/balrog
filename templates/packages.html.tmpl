@@ -5,11 +5,14 @@
   <head>
     {{template "Head" .}}
     <style>
-      body {
-        overflow-x: hidden;
+      .dataTables_wrapper {
+        padding: 0;
       }
       table.dataTable {
         margin-top: 0 !important;
+      }
+      body {
+        overflow-x: hidden;
       }
       #packages_filter {
         display: none;
@@ -19,6 +22,12 @@
       }
       #packages_wrapper {
         overflow-x: scroll;
+      }
+      #packages_wrapper .row {
+        margin-right: 0px;
+      }
+      #packages_wrapper .row .col-sm-12{
+        padding-right: 0px;
       }
     </style>
   </head>
