@@ -17,8 +17,7 @@ func (s *Server) initRouter() error {
 
 	// Middleware
 	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
+	r.Use(s.AccessLogMiddleware)
 
 	// Error handlers
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {

@@ -43,6 +43,7 @@
           <th scope="col" class="text-center">Arch</th>
           <th scope="col" class="text-center" style="width:35px;">URL</th>
           <th scope="col">Description</th>
+          <th scope="col" class="text-center">Build Time</th>
           <th scope="col" class="text-center">License</th>
           <th scope="col" class="text-center" style="width:35px;">DL</th>
         </tr>
@@ -57,6 +58,7 @@
               <a href="{{.URL}}"><span class="oi oi-external-link"></span></a>
             </td>
             <td>{{.Description}}</td>
+            <td class="text-center">{{.BuildTime.Format "2006/01/02 15:04:05"}}</td>
             <td class="text-center">{{.License}}</td>
             <td class="text-center">
               <a href="/{{$current_repo.Name}}/{{.Arch}}/{{.APK}}"><span class="oi oi-data-transfer-download"></span></a>
@@ -117,6 +119,7 @@
     <script type="text/javascript">
       $(document).ready(function(){
         var table = $('#packages').DataTable({
+          "order": [[ 5, "desc" ]],
           "ordering": true,
           "info":     false,
           "paging":   false,
@@ -127,6 +130,7 @@
             { "orderable": true },
             { "orderable": false },
             { "orderable": false },
+            { "orderable": true },
             { "orderable": true },
             { "orderable": false },
           ]

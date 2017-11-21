@@ -2,6 +2,7 @@ package browser
 
 import (
 	"context"
+	"fmt"
 	"html/template"
 	"net/http"
 	"os"
@@ -65,13 +66,17 @@ func (s *Server) Run() error {
 		Addr:    s.HTTP.Addr,
 		Handler: s.router,
 	}
+	proto := "http"
+	if h.TLSConfig != nil {
+		proto = "https"
+	}
 
 	errCh := make(chan error, 1)
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() { errCh <- h.ListenAndServe() }()
-	logrus.WithField("addr", s.HTTP.Addr).Info("serverRunning")
+	logrus.WithField("addr", fmt.Sprintf("%s://%s", proto, s.HTTP.Addr)).Info("serverRunning")
 
 	select {
 	case err := <-errCh:

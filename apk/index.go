@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"strconv"
 	"strings"
+	"time"
 )
 
 // ABuild default values for packages and indexes
@@ -25,22 +27,22 @@ type Index struct {
 
 // Package defines a package entry in an APKINDEX file
 type Package struct {
-	C             string   `apk:"C" json:"-"`
-	Package       string   `apk:"P" json:"name"`
-	Version       string   `apk:"V" json:"version"`
-	Description   string   `apk:"T" json:"description"`
-	Arch          string   `apk:"A" json:"arch"`
-	PackageSize   string   `apk:"S" json:"size"`
-	InstalledSize string   `apk:"I" json:"installed_size"`
-	URL           string   `apk:"U" json:"url"`
-	License       string   `apk:"L" json:"license"`
-	Origin        string   `apk:"o" json:"origin"`
-	Maintainer    string   `apk:"m" json:"maintainer"`
-	BuildTime     string   `apk:"t" json:"build_time"`
-	Commit        string   `apk:"c" json:"build_commit"`
-	Dependencies  []string `apk:"D" json:"dependencies"`
-	Provides      []string `apk:"p" json:"provides"`
-	APK           string   `apk:"-" json:"apk_url"`
+	C             string    `apk:"C" json:"-"`
+	Package       string    `apk:"P" json:"name"`
+	Version       string    `apk:"V" json:"version"`
+	Description   string    `apk:"T" json:"description"`
+	Arch          string    `apk:"A" json:"arch"`
+	PackageSize   string    `apk:"S" json:"size"`
+	InstalledSize string    `apk:"I" json:"installed_size"`
+	URL           string    `apk:"U" json:"url"`
+	License       string    `apk:"L" json:"license"`
+	Origin        string    `apk:"o" json:"origin"`
+	Maintainer    string    `apk:"m" json:"maintainer"`
+	BuildTime     time.Time `apk:"t" json:"build_time"`
+	Commit        string    `apk:"c" json:"build_commit"`
+	Dependencies  []string  `apk:"D" json:"dependencies"`
+	Provides      []string  `apk:"p" json:"provides"`
+	APK           string    `apk:"-" json:"apk_url"`
 }
 
 func parseIndex(index io.Reader) (*Index, error) {
@@ -80,7 +82,8 @@ func parseIndex(index io.Reader) (*Index, error) {
 			case "m":
 				p.Maintainer = v
 			case "t":
-				p.BuildTime = v
+				d, _ := strconv.ParseInt(v, 10, 64)
+				p.BuildTime = time.Unix(d, 0)
 			case "c":
 				p.Commit = v
 			case "D":
