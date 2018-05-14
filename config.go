@@ -13,6 +13,13 @@ type Config struct {
 	HTTP         HTTPConfig        `json:"http"`
 	Storage      StoreConfig       `json:"storage"`
 	Repositories []*apk.Repository `json:"repositories"`
+	Static       []*StaticFolder   `json:"static"`
+}
+
+// StaticFolder defines a staticly served storage folder
+type StaticFolder struct {
+	WebPrefix     string `json:"web_prefix"`
+	StoragePrefix string `json:"storage_prefix"`
 }
 
 // SetDefaultConfig fills in the default values for a configuration file

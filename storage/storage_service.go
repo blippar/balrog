@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"errors"
 	"io"
 )
 
@@ -12,8 +11,3 @@ type Service interface {
 	WithPrefix(string) Service
 	GetObject(context.Context, string) (io.ReadCloser, error)
 }
-
-// Err.. defines potential errors returned by a storage.Service
-var (
-	ErrObjectNotFound = errors.New("Object not found")
-)
