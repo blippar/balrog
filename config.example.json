@@ -11,9 +11,10 @@
     "minio": {
       "endpoint":    "s3.amazonaws.com",
       "access_key":  "AKIAIOSFODNN7EXAMPLE",
-  		"private_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+      "private_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
       "bucket":      "my-aports",
-  		"ssl":         true
+      "region":      "us-west-2",
+      "ssl":         true
     }
   },
   "repositories": [
@@ -24,6 +25,12 @@
       "public_keys":[
         "me@myorg.com-deadbeef.rsa.pub"
       ]
+    }
+  ],
+  "static": [
+    {
+      "web_prefix": "assets",
+      "storage_prefix": "my_assets"
     }
   ]
 }

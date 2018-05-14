@@ -33,6 +33,9 @@ func (s *Server) initRouter() error {
 		rep.Init(s.Storage.Service)
 		r.Mount("/"+rep.Name+"/", s.newRepositoryRouter(rep))
 	}
+	for _, st := range s.Static {
+		r.Mount("/"+st.WebPrefix+"/", s.newStaticRouter(st))
+	}
 	r.Mount("/dist/", s.newDistRouter("/dist", s.HTTP.Dist))
 
 	// Attach router to Server
@@ -71,6 +74,16 @@ func (s *Server) newRepositoryRouter(repo *apk.Repository) http.Handler {
 	}))
 	r.Get("/{arch}/{file}", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		s.serveRepoPackages(repo, w, r)
+	}))
+	return r
+}
+
+// newStaticRouter creates a new subrouter for the passed static folder
+func (s *Server) newStaticRouter(st *StaticFolder) http.Handler {
+	r := chi.NewRouter()
+	store := s.Storage.WithPrefix(st.StoragePrefix)
+	r.Get("/{file}", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		s.serveStaticFile(store, w, r)
 	}))
 	return r
 }
