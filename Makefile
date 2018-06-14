@@ -41,7 +41,7 @@ $(TARGET): GOOPT += -ldflags '$(GOLDF)'
 $(TARGET):
 	$(info >>> Building $@ from $(GOPKGDIR) using $(GOBIN))
 	$(if $(GOENV),$(info >>> with $(GOENV) and GOOPT=$(GOOPT)),)
-	$(GOENV) $(GOBIN) build -o $@ $(GOOPT) $(GOPKGDIR)
+	$(GOENV) $(GOBIN) build $(GOOPT) -o $@ $(GOPKGDIR)
 
 # Build binary staticly
 static: GOLDF += -extldflags "-static"

@@ -8,7 +8,7 @@ ENV BALROG_VERSION="$VERSION"
 COPY . /go/src/github.com/blippar/balrog
 WORKDIR /go/src/github.com/blippar/balrog
 
-RUN make VERSION="${MGOEXPORT_VERSION}" bin/balrog
+RUN make VERSION="${BALROG_VERSION}" bin/balrog
 
 FROM alpine:3.4 AS runtime
 
