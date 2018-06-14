@@ -1,18 +1,6 @@
-# Minio Go Client SDK for Amazon S3 Compatible Cloud Storage [![Slack](https://slack.minio.io/slack?type=svg)](https://slack.minio.io) [![Sourcegraph](https://sourcegraph.com/github.com/minio/minio-go/-/badge.svg)](https://sourcegraph.com/github.com/minio/minio-go?badge)
+# Minio Go Client SDK for Amazon S3 Compatible Cloud Storage [![Slack](https://slack.minio.io/slack?type=svg)](https://slack.minio.io) [![Sourcegraph](https://sourcegraph.com/github.com/minio/minio-go/-/badge.svg)](https://sourcegraph.com/github.com/minio/minio-go?badge) [![Apache V2 License](http://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/minio/minio-go/blob/master/LICENSE)
 
 The Minio Go Client SDK provides simple APIs to access any Amazon S3 compatible object storage.
-
-**Supported cloud storage providers:** 
-
-- AWS Signature Version 4
-   - Amazon S3
-   - Minio
-
-- AWS Signature Version 2
-   - Google Cloud Storage (Compatibility Mode)
-   - Openstack Swift + Swift3 middleware
-   - Ceph Object Gateway
-   - Riak CS
 
 This quickstart guide will show you how to install the Minio client SDK, connect to Minio, and provide a walkthrough for a simple file uploader. For a complete list of APIs and examples, please take a look at the [Go Client API Reference](https://docs.minio.io/docs/golang-client-api-reference).
 
@@ -142,7 +130,6 @@ The full API Reference is available here.
 ### API Reference : Bucket policy Operations
 * [`SetBucketPolicy`](https://docs.minio.io/docs/golang-client-api-reference#SetBucketPolicy)
 * [`GetBucketPolicy`](https://docs.minio.io/docs/golang-client-api-reference#GetBucketPolicy)
-* [`ListBucketPolicies`](https://docs.minio.io/docs/golang-client-api-reference#ListBucketPolicies)
 
 ### API Reference : Bucket notification Operations
 * [`SetBucketNotification`](https://docs.minio.io/docs/golang-client-api-reference#SetBucketNotification)
@@ -167,10 +154,6 @@ The full API Reference is available here.
 * [`RemoveObject`](https://docs.minio.io/docs/golang-client-api-reference#RemoveObject)
 * [`RemoveObjects`](https://docs.minio.io/docs/golang-client-api-reference#RemoveObjects)
 * [`RemoveIncompleteUpload`](https://docs.minio.io/docs/golang-client-api-reference#RemoveIncompleteUpload)
-
-### API Reference: Encrypted Object Operations
-* [`GetEncryptedObject`](https://docs.minio.io/docs/golang-client-api-reference#GetEncryptedObject)
-* [`PutEncryptedObject`](https://docs.minio.io/docs/golang-client-api-reference#PutEncryptedObject)
 
 ### API Reference : Presigned Operations
 * [`PresignedGetObject`](https://docs.minio.io/docs/golang-client-api-reference#PresignedGetObject)
@@ -245,3 +228,5 @@ The full API Reference is available here.
 [![Build Status](https://travis-ci.org/minio/minio-go.svg)](https://travis-ci.org/minio/minio-go)
 [![Build status](https://ci.appveyor.com/api/projects/status/1d05e6nvxcelmrak?svg=true)](https://ci.appveyor.com/project/harshavardhana/minio-go)
 
+## License
+This SDK is distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0), see [LICENSE](./LICENSE) and [NOTICE](./NOTICE) for more information.

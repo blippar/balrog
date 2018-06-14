@@ -7,30 +7,16 @@
     "filesystem": {
       "prefix": "/data/packages",
       "cache":  60
-    },
-    "minio": {
-      "endpoint":    "s3.amazonaws.com",
-      "access_key":  "AKIAIOSFODNN7EXAMPLE",
-      "private_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
-      "bucket":      "my-aports",
-      "region":      "us-west-2",
-      "ssl":         true
     }
   },
   "repositories": [
     {
       "name": "main",
-      "available_arch": ["x86","x86_64","armhf", "aarch64","ppc64le","s390x"],
+      "available_arch": ["x86_64"],
       "storage_prefix": "main",
       "public_keys":[
-        "me@myorg.com-deadbeef.rsa.pub"
+        "builder.rsa.pub"
       ]
-    }
-  ],
-  "static": [
-    {
-      "web_prefix": "assets",
-      "storage_prefix": "my_assets"
     }
   ]
 }

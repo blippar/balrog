@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2015, 2016 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2015-2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +119,9 @@ func (c Client) PresignedPostPolicy(p *PostPolicy) (u *url.URL, formData map[str
 		return nil, nil, err
 	}
 
-	u, err = c.makeTargetURL(bucketName, "", location, nil)
+	isVirtualHost := c.isVirtualHostStyleRequest(*c.endpointURL, bucketName)
+
+	u, err = c.makeTargetURL(bucketName, "", location, isVirtualHost, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -147,7 +150,7 @@ func (c Client) PresignedPostPolicy(p *PostPolicy) (u *url.URL, formData map[str
 		policyBase64 := p.base64()
 		p.formData["policy"] = policyBase64
 		// For Google endpoint set this value to be 'GoogleAccessId'.
-		if s3utils.IsGoogleEndpoint(c.endpointURL) {
+		if s3utils.IsGoogleEndpoint(*c.endpointURL) {
 			p.formData["GoogleAccessId"] = accessKeyID
 		} else {
 			// For all other endpoints set this value to be 'AWSAccessKeyId'.

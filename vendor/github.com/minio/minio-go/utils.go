@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2015 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2015-2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -208,14 +209,11 @@ func getDefaultLocation(u url.URL, regionOverride string) (location string) {
 	if regionOverride != "" {
 		return regionOverride
 	}
-	if s3utils.IsAmazonChinaEndpoint(u) {
-		return "cn-north-1"
+	region := s3utils.GetRegionFromURL(u)
+	if region == "" {
+		region = "us-east-1"
 	}
-	if s3utils.IsAmazonGovCloudEndpoint(u) {
-		return "us-gov-west-1"
-	}
-	// Default to location to 'us-east-1'.
-	return "us-east-1"
+	return region
 }
 
 var supportedHeaders = []string{
@@ -223,14 +221,14 @@ var supportedHeaders = []string{
 	"cache-control",
 	"content-encoding",
 	"content-disposition",
+	"content-language",
+	"x-amz-website-redirect-location",
 	// Add more supported headers here.
 }
 
-// cseHeaders is list of client side encryption headers
-var cseHeaders = []string{
-	"X-Amz-Iv",
-	"X-Amz-Key",
-	"X-Amz-Matdesc",
+// isStorageClassHeader returns true if the header is a supported storage class header
+func isStorageClassHeader(headerKey string) bool {
+	return strings.ToLower(amzStorageClass) == strings.ToLower(headerKey)
 }
 
 // isStandardHeader returns true if header is a supported header and not a custom header
@@ -238,19 +236,6 @@ func isStandardHeader(headerKey string) bool {
 	key := strings.ToLower(headerKey)
 	for _, header := range supportedHeaders {
 		if strings.ToLower(header) == key {
-			return true
-		}
-	}
-	return false
-}
-
-// isCSEHeader returns true if header is a client side encryption header.
-func isCSEHeader(headerKey string) bool {
-	key := strings.ToLower(headerKey)
-	for _, h := range cseHeaders {
-		header := strings.ToLower(h)
-		if (header == key) ||
-			(("x-amz-meta-" + header) == key) {
 			return true
 		}
 	}
@@ -276,4 +261,11 @@ func isSSEHeader(headerKey string) bool {
 		}
 	}
 	return false
+}
+
+// isAmzHeader returns true if header is a x-amz-meta-* or x-amz-acl header.
+func isAmzHeader(headerKey string) bool {
+	key := strings.ToLower(headerKey)
+
+	return strings.HasPrefix(key, "x-amz-meta-") || key == "x-amz-acl"
 }

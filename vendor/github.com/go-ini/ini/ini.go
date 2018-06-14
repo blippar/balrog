@@ -32,7 +32,7 @@ const (
 
 	// Maximum allowed depth when recursively substituing variable names.
 	_DEPTH_VALUES = 99
-	_VERSION      = "1.30.3"
+	_VERSION      = "1.37.0"
 )
 
 // Version returns current package version literal.
@@ -52,6 +52,9 @@ var (
 	// Indicate whether to align "=" sign with spaces to produce pretty output
 	// or reduce all possible spaces for compact format.
 	PrettyFormat = true
+
+	// Place spaces around "=" sign even when PrettyFormat is false
+	PrettyEqual = false
 
 	// Explicitly write DEFAULT section header
 	DefaultHeader = false
@@ -134,8 +137,26 @@ type LoadOptions struct {
 	AllowBooleanKeys bool
 	// AllowShadows indicates whether to keep track of keys with same name under same section.
 	AllowShadows bool
-	// UnescapeValueDoubleQuotes indicates whether to unescape double quotes inside value to regular format when value is surrounded by double quotes, e.g. key="a \"value\"" => key=a "value"
+	// AllowNestedValues indicates whether to allow AWS-like nested values.
+	// Docs: http://docs.aws.amazon.com/cli/latest/topic/config-vars.html#nested-values
+	AllowNestedValues bool
+	// AllowPythonMultilineValues indicates whether to allow Python-like multi-line values.
+	// Docs: https://docs.python.org/3/library/configparser.html#supported-ini-file-structure
+	// Relevant quote:  Values can also span multiple lines, as long as they are indented deeper
+	// than the first line of the value.
+	AllowPythonMultilineValues bool
+	// SpaceBeforeInlineComment indicates whether to allow comment symbols (\# and \;) inside value.
+	// Docs: https://docs.python.org/2/library/configparser.html
+	// Quote: Comments may appear on their own in an otherwise empty line, or may be entered in lines holding values or section names.
+	// In the latter case, they need to be preceded by a whitespace character to be recognized as a comment.
+	SpaceBeforeInlineComment bool
+	// UnescapeValueDoubleQuotes indicates whether to unescape double quotes inside value to regular format
+	// when value is surrounded by double quotes, e.g. key="a \"value\"" => key=a "value"
 	UnescapeValueDoubleQuotes bool
+	// UnescapeValueCommentSymbols indicates to unescape comment symbols (\# and \;) inside value to regular format
+	// when value is NOT surrounded by any quotes.
+	// Note: UNSTABLE, behavior might change to only unescape inside double quotes but may noy necessary at all.
+	UnescapeValueCommentSymbols bool
 	// Some INI formats allow group blocks that store a block of raw content that doesn't otherwise
 	// conform to key/value pairs. Specify the names of those blocks here.
 	UnparseableSections []string
