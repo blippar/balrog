@@ -10,7 +10,7 @@
         <img alt="GoDoc" src="https://godoc.org/github.com/blippar/balrog?status.svg">
     </a>
     <a href="https://github.com/blippar/balrog/blob/master/LICENSE">
-       <img alt="License" src="  https://img.shields.io/github/license/blippar/balrog.svg">
+       <img alt="License" src="https://img.shields.io/github/license/blippar/balrog.svg">
     </a>
     <a href="https://github.com/blippar/balrog/releases/latest">
         <img alt="Latest Release" src="https://img.shields.io/github/release/blippar/balrog.svg">
