@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path"
 	"syscall"
 
 	"github.com/sirupsen/logrus"
@@ -41,7 +42,7 @@ func (s *Server) Init() (err error) {
 	}
 
 	// Init templator
-	if s.tmpl, err = template.New("").ParseGlob(s.HTTP.Templates); err != nil {
+	if s.tmpl, err = template.New("").ParseGlob(path.Join(s.HTTP.Templates, "*.html.tmpl")); err != nil {
 		return err
 	}
 

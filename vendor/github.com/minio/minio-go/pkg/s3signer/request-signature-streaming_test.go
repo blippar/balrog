@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2017 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +33,7 @@ func TestGetSeedSignature(t *testing.T) {
 
 	req := NewRequest("PUT", "/examplebucket/chunkObject.txt", body)
 	req.Header.Set("x-amz-storage-class", "REDUCED_REDUNDANCY")
-	req.URL.Host = "s3.amazonaws.com"
+	req.Host = "s3.amazonaws.com"
 
 	reqTime, err := time.Parse("20060102T150405Z", "20130524T000000Z")
 	if err != nil {
@@ -68,6 +69,7 @@ func TestSetStreamingAuthorization(t *testing.T) {
 
 	req := NewRequest("PUT", "/examplebucket/chunkObject.txt", nil)
 	req.Header.Set("x-amz-storage-class", "REDUCED_REDUNDANCY")
+	req.Host = ""
 	req.URL.Host = "s3.amazonaws.com"
 
 	dataLen := int64(65 * 1024)
@@ -92,6 +94,7 @@ func TestStreamingReader(t *testing.T) {
 	req := NewRequest("PUT", "/examplebucket/chunkObject.txt", nil)
 	req.Header.Set("x-amz-storage-class", "REDUCED_REDUNDANCY")
 	req.ContentLength = 65 * 1024
+	req.Host = ""
 	req.URL.Host = "s3.amazonaws.com"
 
 	baseReader := ioutil.NopCloser(bytes.NewReader(bytes.Repeat([]byte("a"), 65*1024)))

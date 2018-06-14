@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2015, 2016 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2015-2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,10 +129,8 @@ func processRemoveMultiObjectsResponse(body io.Reader, objects []string, errorCh
 	}
 }
 
-// RemoveObjects remove multiples objects from a bucket.
-// The list of objects to remove are received from objectsCh.
-// Remove failures are sent back via error channel.
-func (c Client) RemoveObjects(bucketName string, objectsCh <-chan string) <-chan RemoveObjectError {
+// RemoveObjectsWithContext - Identical to RemoveObjects call, but accepts context to facilitate request cancellation.
+func (c Client) RemoveObjectsWithContext(ctx context.Context, bucketName string, objectsCh <-chan string) <-chan RemoveObjectError {
 	errorCh := make(chan RemoveObjectError, 1)
 
 	// Validate if bucket name is valid.
@@ -188,7 +187,7 @@ func (c Client) RemoveObjects(bucketName string, objectsCh <-chan string) <-chan
 			// Generate remove multi objects XML request
 			removeBytes := generateRemoveMultiObjectsRequest(batch)
 			// Execute GET on bucket to list objects.
-			resp, err := c.executeMethod(context.Background(), "POST", requestMetadata{
+			resp, err := c.executeMethod(ctx, "POST", requestMetadata{
 				bucketName:       bucketName,
 				queryValues:      urlValues,
 				contentBody:      bytes.NewReader(removeBytes),
@@ -196,6 +195,12 @@ func (c Client) RemoveObjects(bucketName string, objectsCh <-chan string) <-chan
 				contentMD5Base64: sumMD5Base64(removeBytes),
 				contentSHA256Hex: sum256Hex(removeBytes),
 			})
+			if resp != nil {
+				if resp.StatusCode != http.StatusOK {
+					e := httpRespToErrorResponse(resp, bucketName, "")
+					errorCh <- RemoveObjectError{ObjectName: "", Err: e}
+				}
+			}
 			if err != nil {
 				for _, b := range batch {
 					errorCh <- RemoveObjectError{ObjectName: b, Err: err}
@@ -210,6 +215,13 @@ func (c Client) RemoveObjects(bucketName string, objectsCh <-chan string) <-chan
 		}
 	}(errorCh)
 	return errorCh
+}
+
+// RemoveObjects removes multiple objects from a bucket.
+// The list of objects to remove are received from objectsCh.
+// Remove failures are sent back via error channel.
+func (c Client) RemoveObjects(bucketName string, objectsCh <-chan string) <-chan RemoveObjectError {
+	return c.RemoveObjectsWithContext(context.Background(), bucketName, objectsCh)
 }
 
 // RemoveIncompleteUpload aborts an partially uploaded object.

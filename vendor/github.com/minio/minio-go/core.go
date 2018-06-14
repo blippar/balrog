@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2017 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2015-2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +21,6 @@ import (
 	"context"
 	"io"
 	"strings"
-
-	"github.com/minio/minio-go/pkg/policy"
 )
 
 // Core - Inherits Client and adds new methods to expose the low level S3 APIs.
@@ -59,6 +58,15 @@ func (c Core) CopyObject(sourceBucket, sourceObject, destBucket, destObject stri
 	return c.copyObjectDo(context.Background(), sourceBucket, sourceObject, destBucket, destObject, metadata)
 }
 
+// CopyObjectPart - creates a part in a multipart upload by copying (a
+// part of) an existing object.
+func (c Core) CopyObjectPart(srcBucket, srcObject, destBucket, destObject string, uploadID string,
+	partID int, startOffset, length int64, metadata map[string]string) (p CompletePart, err error) {
+
+	return c.copyObjectPartDo(context.Background(), srcBucket, srcObject, destBucket, destObject, uploadID,
+		partID, startOffset, length, metadata)
+}
+
 // PutObject - Upload object. Uploads using single PUT call.
 func (c Core) PutObject(bucket, object string, data io.Reader, size int64, md5Base64, sha256Hex string, metadata map[string]string) (ObjectInfo, error) {
 	opts := PutObjectOptions{}
@@ -68,10 +76,14 @@ func (c Core) PutObject(bucket, object string, data io.Reader, size int64, md5Ba
 			opts.ContentEncoding = v
 		} else if strings.ToLower(k) == "content-disposition" {
 			opts.ContentDisposition = v
+		} else if strings.ToLower(k) == "content-language" {
+			opts.ContentLanguage = v
 		} else if strings.ToLower(k) == "content-type" {
 			opts.ContentType = v
 		} else if strings.ToLower(k) == "cache-control" {
 			opts.CacheControl = v
+		} else if strings.ToLower(k) == strings.ToLower(amzWebsiteRedirectLocation) {
+			opts.WebsiteRedirectLocation = v
 		} else {
 			m[k] = metadata[k]
 		}
@@ -93,13 +105,7 @@ func (c Core) ListMultipartUploads(bucket, prefix, keyMarker, uploadIDMarker, de
 
 // PutObjectPart - Upload an object part.
 func (c Core) PutObjectPart(bucket, object, uploadID string, partID int, data io.Reader, size int64, md5Base64, sha256Hex string) (ObjectPart, error) {
-	return c.PutObjectPartWithMetadata(bucket, object, uploadID, partID, data, size, md5Base64, sha256Hex, nil)
-}
-
-// PutObjectPartWithMetadata - upload an object part with additional request metadata.
-func (c Core) PutObjectPartWithMetadata(bucket, object, uploadID string, partID int, data io.Reader,
-	size int64, md5Base64, sha256Hex string, metadata map[string]string) (ObjectPart, error) {
-	return c.uploadPart(context.Background(), bucket, object, uploadID, data, partID, md5Base64, sha256Hex, size, metadata)
+	return c.uploadPart(context.Background(), bucket, object, uploadID, data, partID, md5Base64, sha256Hex, size, nil)
 }
 
 // ListObjectParts - List uploaded parts of an incomplete upload.x
@@ -121,12 +127,12 @@ func (c Core) AbortMultipartUpload(bucket, object, uploadID string) error {
 }
 
 // GetBucketPolicy - fetches bucket access policy for a given bucket.
-func (c Core) GetBucketPolicy(bucket string) (policy.BucketAccessPolicy, error) {
+func (c Core) GetBucketPolicy(bucket string) (string, error) {
 	return c.getBucketPolicy(bucket)
 }
 
 // PutBucketPolicy - applies a new bucket access policy for a given bucket.
-func (c Core) PutBucketPolicy(bucket string, bucketPolicy policy.BucketAccessPolicy) error {
+func (c Core) PutBucketPolicy(bucket, bucketPolicy string) error {
 	return c.putBucketPolicy(bucket, bucketPolicy)
 }
 
@@ -140,5 +146,5 @@ func (c Core) GetObject(bucketName, objectName string, opts GetObjectOptions) (i
 // StatObject is a lower level API implemented to support special
 // conditions matching etag, modtime on a request.
 func (c Core) StatObject(bucketName, objectName string, opts StatObjectOptions) (ObjectInfo, error) {
-	return c.statObject(bucketName, objectName, opts)
+	return c.statObject(context.Background(), bucketName, objectName, opts)
 }

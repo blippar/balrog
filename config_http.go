@@ -10,6 +10,6 @@ type HTTPConfig struct {
 // SetDefaultConfig defines the default config for an HTTP server
 func (h *HTTPConfig) SetDefaultConfig() {
 	h.Addr = ":8000"
-	h.Templates = "templates/*.html.tmpl"
+	h.Templates = "templates/"
 	h.Dist = "dist/"
 }

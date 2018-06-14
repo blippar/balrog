@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2015, 2016 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2015-2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +33,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/minio/minio-go/pkg/encrypt"
 	"github.com/minio/minio-go/pkg/s3utils"
 )
 
@@ -137,7 +139,7 @@ func (c Client) putObjectMultipartNoStream(ctx context.Context, bucketName, obje
 		// Proceed to upload the part.
 		var objPart ObjectPart
 		objPart, err = c.uploadPart(ctx, bucketName, objectName, uploadID, rd, partNumber,
-			md5Base64, sha256Hex, int64(length), opts.UserMetadata)
+			md5Base64, sha256Hex, int64(length), opts.ServerSideEncryption)
 		if err != nil {
 			return totalUploadedSize, err
 		}
@@ -225,11 +227,9 @@ func (c Client) initiateMultipartUpload(ctx context.Context, bucketName, objectN
 	return initiateMultipartUploadResult, nil
 }
 
-const serverEncryptionKeyPrefix = "x-amz-server-side-encryption"
-
 // uploadPart - Uploads a part in a multipart upload.
 func (c Client) uploadPart(ctx context.Context, bucketName, objectName, uploadID string, reader io.Reader,
-	partNumber int, md5Base64, sha256Hex string, size int64, metadata map[string]string) (ObjectPart, error) {
+	partNumber int, md5Base64, sha256Hex string, size int64, sse encrypt.ServerSide) (ObjectPart, error) {
 	// Input validation.
 	if err := s3utils.CheckValidBucketName(bucketName); err != nil {
 		return ObjectPart{}, err
@@ -259,12 +259,8 @@ func (c Client) uploadPart(ctx context.Context, bucketName, objectName, uploadID
 
 	// Set encryption headers, if any.
 	customHeader := make(http.Header)
-	for k, v := range metadata {
-		if len(v) > 0 {
-			if strings.HasPrefix(strings.ToLower(k), serverEncryptionKeyPrefix) {
-				customHeader.Set(k, v)
-			}
-		}
+	if sse != nil && sse.Type() != encrypt.S3 && sse.Type() != encrypt.KMS {
+		sse.Marshal(customHeader)
 	}
 
 	reqMetadata := requestMetadata{

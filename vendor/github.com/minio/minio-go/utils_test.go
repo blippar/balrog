@@ -1,5 +1,6 @@
 /*
- * Minio Go Library for Amazon S3 Compatible Cloud Storage (C) 2015 Minio, Inc.
+ * Minio Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2015-2017 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package minio
 
 import (
@@ -80,8 +82,10 @@ func TestGetEndpointURL(t *testing.T) {
 	}{
 		{"s3.amazonaws.com", true, "https://s3.amazonaws.com", nil, true},
 		{"s3.cn-north-1.amazonaws.com.cn", true, "https://s3.cn-north-1.amazonaws.com.cn", nil, true},
+		{"s3.cn-northwest-1.amazonaws.com.cn", true, "https://s3.cn-northwest-1.amazonaws.com.cn", nil, true},
 		{"s3.amazonaws.com", false, "http://s3.amazonaws.com", nil, true},
 		{"s3.cn-north-1.amazonaws.com.cn", false, "http://s3.cn-north-1.amazonaws.com.cn", nil, true},
+		{"s3.cn-northwest-1.amazonaws.com.cn", false, "http://s3.cn-northwest-1.amazonaws.com.cn", nil, true},
 		{"192.168.1.1:9000", false, "http://192.168.1.1:9000", nil, true},
 		{"192.168.1.1:9000", true, "https://192.168.1.1:9000", nil, true},
 		{"s3.amazonaws.com:443", true, "https://s3.amazonaws.com:443", nil, true},
@@ -198,7 +202,13 @@ func TestDefaultBucketLocation(t *testing.T) {
 			regionOverride:   "",
 			expectedLocation: "cn-north-1",
 		},
-		// No region provided, no standard region strings provided as well. - Test 5.
+		// China region should be honored, region override not provided. - Test 5.
+		{
+			endpointURL:      url.URL{Host: "s3.cn-northwest-1.amazonaws.com.cn"},
+			regionOverride:   "",
+			expectedLocation: "cn-northwest-1",
+		},
+		// No region provided, no standard region strings provided as well. - Test 6.
 		{
 			endpointURL:      url.URL{Host: "s3.amazonaws.com"},
 			regionOverride:   "",
@@ -302,6 +312,7 @@ func TestIsStandardHeader(t *testing.T) {
 		{"content-type", true},
 		{"cache-control", true},
 		{"content-disposition", true},
+		{"content-language", true},
 		{"random-header", false},
 	}
 
@@ -339,25 +350,26 @@ func TestIsSSEHeader(t *testing.T) {
 	}
 }
 
-// Tests if header is client encryption header
-func TestIsCSEHeader(t *testing.T) {
+// Tests if header is x-amz-meta or x-amz-acl
+func TestIsAmzHeader(t *testing.T) {
 	testCases := []struct {
 		// Input.
 		header string
 		// Expected result.
 		expectedValue bool
 	}{
-		{"x-amz-iv", true},
-		{"x-amz-key", true},
-		{"x-amz-matdesc", true},
+		{"x-amz-iv", false},
+		{"x-amz-key", false},
+		{"x-amz-matdesc", false},
 		{"x-amz-meta-x-amz-iv", true},
 		{"x-amz-meta-x-amz-key", true},
 		{"x-amz-meta-x-amz-matdesc", true},
+		{"x-amz-acl", true},
 		{"random-header", false},
 	}
 
 	for i, testCase := range testCases {
-		actual := isCSEHeader(testCase.header)
+		actual := isAmzHeader(testCase.header)
 		if actual != testCase.expectedValue {
 			t.Errorf("Test %d: Expected to pass, but failed", i+1)
 		}
