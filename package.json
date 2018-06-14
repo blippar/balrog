@@ -1,26 +1,29 @@
 {
-  "name": "alpine-package-browser",
+  "name": "balrog",
   "version": "1.0.0",
-  "description": "",
+  "description": "An Alpine Linux package repository proxy with a simple WebUI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blippar/balrog.git"
+  },
   "main": "gulpfile.js",
   "dependencies": {
-    "bootstrap": "^4.0.0-beta.2",
+    "bootstrap": "^4.1.1",
     "datatables": "^1.10.13",
     "datatables.net-bs4": "^1.10.16",
-    "jquery": "^3.2.1",
+    "jquery": "^3.3.1",
     "open-iconic": "^1.1.1",
-    "popper.js": "^1.12.6"
+    "popper.js": "^1.14.3"
   },
   "devDependencies": {
     "del": "^3.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-clean-css": "^3.9.0",
     "gulp-concat": "^2.6.1",
-    "gulp-copy": "^1.0.1",
     "gulp-flatten": "^0.3.1",
     "gulp-uglify": "^3.0.0"
   },
   "scripts": {},
-  "author": "",
-  "license": "UNLICENSED"
+  "author": "blippar",
+  "license": "Apache-2.0"
 }
