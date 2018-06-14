@@ -32,9 +32,9 @@ TARGET    := bin/balrog
 GOPKGDIR   = $(@:bin/%=./cmd/%)
 
 # Local meta targets
-all: $(TARGET) $(GULPDIST)
 balrog: $(TARGET)
 assets: $(GULPDIST)
+all: $(TARGET) $(GULPDIST)
 
 # Build binary with GOBIN using target name & GOPKGDIR
 $(TARGET): GOOPT += -ldflags '$(GOLDF)'
